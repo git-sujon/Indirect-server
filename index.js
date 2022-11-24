@@ -27,6 +27,10 @@ const run = async() => {
 
 
     try{
+        // Catagories 
+        // ..............................................................................
+
+        // get single Catagories  
 
         app.get('/catagories/:id', async(req, res)=> {
             const id= req.params.id
@@ -35,12 +39,26 @@ const run = async() => {
             res.send(result)
         })
 
+        // get all Catagories  
         app.get('/catagories', async(req, res)=> {
             const result= await catagoriesCollection.find({}).toArray()
             res.send(result)
         })
 
+        // ..............................................................................
+        // User 
+        // ..............................................................................
 
+        // get all users 
+        app.get("/users", async (req, res) => {
+            const authHeader = req.headers.authorization;
+            const email = req.headers.email;
+      
+            const query = {};
+            const users = await usersCollection.find(query).toArray();
+      
+            res.send(users);
+          });
 
 
 
@@ -51,6 +69,44 @@ const run = async() => {
     }
 }
 run().catch(err=> console.log(err))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.get('/', (req, res)=> {
