@@ -3,7 +3,7 @@ const app = express()
 const port = process.env.PORT || 5000
 const cors= require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 let jwt = require("jsonwebtoken");
 
 
@@ -28,7 +28,17 @@ const run = async() => {
 
     try{
 
+        app.get('/catagories/:id', async(req, res)=> {
+            const id= req.params.id
+            const query= {_id: ObjectId(id)}
+            const result= await catagoriesCollection.findOne(query)
+            res.send(result)
+        })
 
+        app.get('/catagories', async(req, res)=> {
+            const result= await catagoriesCollection.find({}).toArray()
+            res.send(result)
+        })
 
 
 
@@ -40,6 +50,7 @@ const run = async() => {
 
     }
 }
+run().catch(err=> console.log(err))
 
 
 app.get('/', (req, res)=> {
