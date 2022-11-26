@@ -25,6 +25,8 @@ const run = async () => {
     .db("indirect")
     .collection("productsCollection");
   const usersCollection = client.db("indirect").collection("usersCollection");
+  const cityCollection = client.db("indirect").collection("cityCollection");
+  const areaUnderCityCollection = client.db("indirect").collection("areaUnderCityCollection");
 
   try {
     // Catagories
@@ -57,7 +59,14 @@ const run = async () => {
     });
 
     app.get("/products", async (req, res) => {
-      const result = await productsCollection.find({}).toArray();
+      const category = req.query.category
+      console.log(category)
+      let query={}
+      if(category) {
+        query=({category : category})
+      }
+      
+      const result = await productsCollection.find(query).toArray();
       res.send(result);
     });
 
