@@ -62,7 +62,14 @@ const run = async () => {
     });
 
     app.post('/products', async(req, res)=> {
-      const product = req.body
+      let product = req.body
+      
+      product ={
+        ...product,
+        Timestamp: new Date()
+      }
+
+
       const result = await productsCollection.insertOne(product)
       res.send(result)
     })
