@@ -26,6 +26,7 @@ const run = async () => {
     .collection("productsCollection");
   const usersCollection = client.db("indirect").collection("usersCollection");
   const bookingCollection = client.db("indirect").collection("bookingCollection");
+  const blogsCollection = client.db("indirect").collection("blogsCollection");
   const cityCollection = client.db("indirect").collection("cityCollection");
   const areaUnderCityCollection = client.db("indirect").collection("areaUnderCityCollection");
 
@@ -149,8 +150,20 @@ const run = async () => {
     // Booking Information
     // ..............................................................................
 
+    app.get("/bookings/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const bookings = await bookingCollection.findOne(query);
+      res.send(bookings);
+    });
+
 app.get('/bookings', async(req, res)=>{
-  const query = {}
+  const buyerEmail = req.query.buyerEmail;
+  console.log(buyerEmail)
+  let query = {}
+  if(buyerEmail){
+    query= {buyerEmail: buyerEmail}
+  }
   const bookings= await bookingCollection.find(query).toArray()
   res.send(bookings)
 })
@@ -216,6 +229,15 @@ app.post('/bookings', async(req, res)=>{
       const result = await usersCollection.insertOne(user);
       res.send(result);
     });
+
+      // ..............................................................................
+    // Blog Posts
+    // ..............................................................................
+
+    app.get('/blogs', async(req,res)=> res.send(await blogsCollection.find({}).toArray()))
+
+
+
   } finally {
   }
 };
