@@ -233,6 +233,9 @@ app.post('/bookings', async(req, res)=>{
       // ..............................................................................
     // Blog Posts
     // ..............................................................................
+    app.get('/blogs/:id', async(req, res)=> res.send(await blogsCollection.findOne({_id : ObjectId(req.params.id)})))
+
+
 
     app.get('/blogs', async(req,res)=> res.send(await blogsCollection.find({}).toArray()))
 
