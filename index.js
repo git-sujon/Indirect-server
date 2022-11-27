@@ -66,9 +66,16 @@ const run = async () => {
     });
 
     app.get("/products", async (req, res) => {
-      const category = req.query.category
-     
       let query={}
+      const category = req.query.category
+      const email = req.query.email
+
+      
+      if(email){
+        query= ({ email: email})
+      }
+      
+    
       if(category) {
         query=({category : category})
       }
@@ -91,14 +98,74 @@ const run = async () => {
     })
 
 
+    // Delete product 
+    app.delete('/products/:id', async(req, res)=>{
+      const id=req.params.id
+      const query= {_id: ObjectId(id)}
+      const result= await productsCollection.deleteOne(query)
+      res.send(result)
+    })
+
+    // Update one for Advertizing 
+    app.put('/products/:id', async(req, res)=>{
+      const id=req.params.id
+      const filter= {_id: ObjectId(id)}
+      const toggle= req.body
+      console.log(toggle)
+      const updateDoc = {
+        $set: {
+          isAdvertized: toggle
+          // isAdvertized: {$not: isAdvertized}
+        },
+      };
+ 
+      const options = { upsert: true };
+      const result= await productsCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
+    })
+
+
+
+    // Updating all Products value
+
+    app.get('/productsUpdate', async(req, res)=> {
+
+      const options= {upsert : true}
+      const updateValue = {
+        $set:{
+
+          accountType: "Seller"
+        }
+      }
+    
+      const result = await productsCollection.updateMany({}, updateValue, options)
+      res.send(result)
+    })
+
+
   
 
     // ..............................................................................
     // Booking Information
     // ..............................................................................
 
+app.get('/bookings', async(req, res)=>{
+  const query = {}
+  const bookings= await bookingCollection.find(query).toArray()
+  res.send(bookings)
+})
+
+
 app.post('/bookings', async(req, res)=>{
-  const booking= req.body
+  let booking= req.body
+
+  if(booking) {
+    booking = {
+      ...booking, 
+      Timestamp: new Date()
+    }
+  }
+
   const result = await bookingCollection.insertOne(booking)
   res.send(result)
 })
