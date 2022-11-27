@@ -25,15 +25,22 @@ const run = async () => {
     .db("indirect")
     .collection("productsCollection");
   const usersCollection = client.db("indirect").collection("usersCollection");
+  const bookingCollection = client.db("indirect").collection("bookingCollection");
   const cityCollection = client.db("indirect").collection("cityCollection");
   const areaUnderCityCollection = client.db("indirect").collection("areaUnderCityCollection");
 
+
   try {
-    // Catagories
+
+
+
+
+    // ..............................................................................
+   // Catagories
     // ..............................................................................
 
-    // get single Catagories
 
+    // get single Catagories
     app.get("/catagories/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -60,7 +67,7 @@ const run = async () => {
 
     app.get("/products", async (req, res) => {
       const category = req.query.category
-      console.log(category)
+     
       let query={}
       if(category) {
         query=({category : category})
@@ -84,9 +91,17 @@ const run = async () => {
     })
 
 
+  
 
+    // ..............................................................................
+    // Booking Information
+    // ..............................................................................
 
-
+app.post('/bookings', async(req, res)=>{
+  const booking= req.body
+  const result = await bookingCollection.insertOne(booking)
+  res.send(result)
+})
 
 
 
