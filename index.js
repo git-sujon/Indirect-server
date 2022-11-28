@@ -112,7 +112,7 @@ const run = async () => {
       const id=req.params.id
       const filter= {_id: ObjectId(id)}
       const toggle= req.body
-      console.log(toggle)
+
       const updateDoc = {
         $set: {
           isAdvertized: toggle
@@ -230,6 +230,28 @@ app.post('/bookings', async(req, res)=>{
       res.send(result);
     });
 
+
+    app.put('/users/:id', async(req, res)=>{
+      const id=req.params.id
+      const filter= {_id: ObjectId(id)}
+      const toggle= req.body
+      
+
+      const updateDoc = {
+        $set: {
+          isVerified: toggle
+          
+        },
+      };
+ 
+      const options = { upsert: true };
+      const result= await usersCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
+    })
+
+
+    // Delete user 
+
       // ..............................................................................
     // Blog Posts
     // ..............................................................................
@@ -239,7 +261,17 @@ app.post('/bookings', async(req, res)=>{
 
     app.get('/blogs', async(req,res)=> res.send(await blogsCollection.find({}).toArray()))
 
+    app.get('/updateBlogs', async(req, res) => {
+      const options= {upsert : true}
+      const updateValue = {
+        $set:{
 
+          Timestamp: new Date()
+        }
+      }
+      const result =await blogsCollection.updateMany({}, updateValue, options)
+      res.send(result)
+    })
 
   } finally {
   }
