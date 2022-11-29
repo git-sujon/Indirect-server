@@ -154,7 +154,6 @@ const run = async () => {
 
     app.get("/bookings", async (req, res) => {
       const buyerEmail = req.query.buyerEmail;
-      console.log(buyerEmail);
       let query = {};
       if (buyerEmail) {
         query = { buyerEmail: buyerEmail };
@@ -190,7 +189,7 @@ const run = async () => {
       res.send(result);
     });
 
-    // get all users
+    // get all users for email
     app.get("/users", async (req, res) => {
       const email = req.query.email;
       const accountType = req.query.accountType;
@@ -200,8 +199,6 @@ const run = async () => {
       if (email) {
         query = { email: email };
       }
-
-    
 
       const users = await usersCollection.find(query).toArray();
 
@@ -213,11 +210,7 @@ const run = async () => {
       const email = req.query.email;
       const accountType = req.query.accountType;
 
-      let query = {};
-
-      if (accountType) {
-        query = { accountType: "Seller" };
-      }
+      const query = { accountType: "Seller" };
 
       const users = await usersCollection.find(query).toArray();
 
@@ -228,28 +221,14 @@ const run = async () => {
       const email = req.query.email;
       const accountType = req.query.accountType;
 
-      let query = {};
-
-      if (accountType) {
-        query = { accountType: "Buyer" };
-      }
+      const query = { accountType: "Buyer" };
 
       const users = await usersCollection.find(query).toArray();
 
       res.send(users);
     });
 
-
-
-
-
-
-
-
-
-    
     //   users post
-
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await usersCollection.insertOne(user);
@@ -260,13 +239,15 @@ const run = async () => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const toggle = req.body;
-      // productUserVerifing(id, toggle)
 
-      const updateDoc = {
-        $set: {
-          isVerified: toggle,
-        },
-      };
+      let updateDoc = {};
+      if (toggle) {
+        updateDoc = {
+          $set: {
+            isVerified: toggle,
+          },
+        };
+      }
 
       const options = { upsert: true };
       const result = await usersCollection.updateOne(
@@ -277,26 +258,6 @@ const run = async () => {
 
       res.send(result);
     });
-
-    // const productUserVerifing  = (userId, toggle) => {
-    //   app.get("/products", async (req, res) => {
-    //     const query= req.query.isVerified
-    //     console.log(query)
-    //     console.log(userId, toggle)
-    //     // const filter= {_id: ObjectId(id)}
-
-    //     // const updateDoc = {
-    //     //   $set: {
-    //     //     isVerified: toggle
-
-    //     //   },
-    //     // };
-
-    //     // const options = { upsert: true };
-    //     // const result= await productsCollection.updateOne(filter, updateDoc, options)
-    //     // res.send(result)
-    //   })
-    // }
 
     // Delete user
 
