@@ -271,10 +271,10 @@ const run = async () => {
         };
       }
 
-      const query = {sellerID : id}
+      // const query = {sellerID : id}
 
       // const allQueryProducts =await productsCollection.find(query).toArray()
-      // // console.log(allQueryProducts)
+      // console.log(allQueryProducts)
   
       // const productFilter = {email: allQueryProducts?.email}
       // let updateVerify = {}
