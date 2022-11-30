@@ -21,13 +21,19 @@ const run = async () => {
   const catagoriesCollection = client
     .db("indirect")
     .collection("catagoriesCollection");
+
   const productsCollection = client
     .db("indirect")
     .collection("productsCollection");
+
   const usersCollection = client.db("indirect").collection("usersCollection");
   const bookingCollection = client
     .db("indirect")
     .collection("bookingCollection");
+  const reportedProduct = client
+    .db("indirect")
+    .collection("reportedProduct");
+
   const blogsCollection = client.db("indirect").collection("blogsCollection");
   const cityCollection = client.db("indirect").collection("cityCollection");
   const areaUnderCityCollection = client
@@ -267,6 +273,58 @@ const run = async () => {
       const result = await usersCollection.deleteOne(query);
       res.send(result);
     });
+
+    // ..............................................................................
+    // Reported Product 
+    // ..............................................................................
+
+    app.delete("/reportedProduct/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reportedProduct.deleteOne(query);
+      res.send(result);
+    });
+
+  app.get("/reportedProduct", async (req, res) =>
+  res.send(await reportedProduct.find({}).toArray())
+);
+
+
+    app.post("/reportedProduct", async(req, res)=> {
+      let product= req.body
+
+      product = {
+        ...product,
+        Timestamp: new Date(),
+      };
+
+      const result = await reportedProduct.insertOne(product)
+      res.send(result)
+    })
+
+
+
+
+    // ..............................................................................
+    // Stripe Payment Method 
+    // ..............................................................................
+
+app.post('/create-payment-intent', async(req, res)=> {
+  const booking =req.body
+  const price = booking.price
+  const amount= price*100
+  const paymentIntent = await stripe.paymentIntents.create({
+    currency: 'usd',
+    amount: amount,
+    "payment_method_types": ['card']
+  })
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+
+})
+
 
     // ..............................................................................
     // Blog Posts
