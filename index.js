@@ -271,6 +271,25 @@ const run = async () => {
         };
       }
 
+      const query = {sellerID : id}
+
+      // const allQueryProducts =await productsCollection.find(query).toArray()
+      // // console.log(allQueryProducts)
+  
+      // const productFilter = {email: allQueryProducts?.email}
+      // let updateVerify = {}
+      // if (toggle) {
+      //   updateVerify = {
+      //     $set: {
+      //       isVerified: toggle,
+      //     },
+      //   };
+      // }
+
+      
+      // const ProductVerifyUpdateResult = await productsCollection.updateMany(productFilter, updateVerify)
+      // console.log(ProductVerifyUpdateResult)
+
       const options = { upsert: true };
       const result = await usersCollection.updateOne(
         filter,
